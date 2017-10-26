@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         requestPermissions();
 
         Intent intent = new Intent(this, AlbumSelectActivity.class);
-        intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_LIMIT, 1); // set limit for image selection
+        intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_LIMIT, 1);
         startActivityForResult(intent, ConstantsCustomGallery.REQUEST_CODE);
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -82,29 +83,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*
-    private void upload() {
-
-        Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
-        StorageReference riversRef = mStorageRef.child("images/rivers.jpg");
+    private void upload(Uri file) {
+        StorageReference riversRef = mStorageRef.child("images/perrito.jpg");
 
         riversRef.putFile(file)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        Toast.makeText(getApplicationContext(), "Se subio chatel", Toast.LENGTH_LONG).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        // ...
+                       Log.e("DEBUG", exception.getMessage());
                     }
                 });
     }
-    */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -138,8 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < images.size(); i++) {
                 Uri uri = Uri.fromFile(new File(images.get(i).path));
-                Log.i("Url", uri.toString());
-                // start play with image uri
+                upload(uri);
 
             }
         }
